@@ -1,0 +1,21 @@
+# Compatible with clang-format 12
+
+BasedOnStyle: WebKit
+
+Standard: c++20
+
+AlwaysBreakTemplateDeclarations: true
+BreakBeforeBraces: Attach
+BreakBeforeConceptDeclarations: true
+ColumnLimit: 100
+FixNamespaceComments: true
+IndentRequires: true
+NamespaceIndentation: None
+SortIncludes: true # clang-format-13: CaseInsensitive
+SortUsingDeclarations: true
+SpaceAfterTemplateKeyword: false
+SpaceBeforeCpp11BracedList : false
+SpaceInEmptyBlock: false
+
+# TODO split parameter list one by line when not fitting
+# TODO always split designated initializers one by line
