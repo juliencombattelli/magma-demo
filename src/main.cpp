@@ -51,6 +51,8 @@ int main(int argc, char* argv[]) try {
     magma::GlfwWindow::Ptr window = magma::GlfwWindow::create(
         default_window_width, default_window_height, applicationName, nullptr, nullptr);
 
+    vk::raii::PhysicalDevice phy = instance.pickPhysicalDevice();
+
     vk::raii::SurfaceKHR surface = instance.makeSurface(window.get());
 
     const std::vector<const char*> device_extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
