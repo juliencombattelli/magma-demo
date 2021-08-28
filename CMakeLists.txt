@@ -9,7 +9,7 @@ endif()
 
 # If MagmaDemo is included as part of a bigger project, assume that this project is actually
 # Magma, or a project that already handles Magma package dependency.
-if(NOT MAGMADEMO_IS_USED_STANDALONE)
+if(MAGMADEMO_IS_USED_STANDALONE)
     option(MAGMADEMO_FIND_PACKAGE_MAGMA "Use find_package to locate Magma" OFF)
     if(MAGMADEMO_FIND_PACKAGE_MAGMA)
         find_package(Magma REQUIRED)
