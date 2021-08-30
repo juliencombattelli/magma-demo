@@ -38,6 +38,24 @@ magma::ContextDebugConfig loadFromFile(const std::string& filename) {
     return debugConfig;
 }
 
+/*
+
+struct PhysicalDeviceCompatibilityChecker {
+    bool check(const vk::raii::PhysicalDevice& device) = 0;
+};
+
+struct PhysicalDeviceScorekeeper {
+    void score() = 0;
+    vk::raii::PhysicalDevice best();
+    vk::raii::PhysicalDevice worst();
+};
+
+struct PhysicalDevicePicker {
+    vk::raii::PhysicalDevice pick(const vk::raii::PhysicalDevices& device) = 0;
+};
+
+*/
+
 int main(int argc, char* argv[]) try {
     magma::ContextCreateInfo createInfo{
         .debugConfig = loadFromFile("config/MagmaDebugConfig.yaml"),
