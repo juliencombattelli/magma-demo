@@ -1,6 +1,8 @@
 #include <magma/Instance.hpp>
 #include <magma/glfw/GlfwStack.hpp>
 
+#include <spdlog/spdlog.h>
+
 #include <yaml-cpp/yaml.h>
 
 #include <algorithm>
@@ -38,23 +40,49 @@ magma::ContextDebugConfig loadFromFile(const std::string& filename) {
     return debugConfig;
 }
 
-/*
+class PhysicalDeviceCompatibilityChecker {
+public:
+    using CompatibilityTest = std::function<bool(const vk::raii::PhysicalDevice&)>;
 
-struct PhysicalDeviceCompatibilityChecker {
-    bool check(const vk::raii::PhysicalDevice& device) = 0;
+    bool isCompatible(const vk::raii::PhysicalDevice& device);
+
+    template<typename TCompatibilityTest>
+    void addTest(TCompatibilityTest&& test) {
+        tests.push_back(std::forward<TCompatibilityTest>(test));
+    }
+
+    static auto areExtensionsAvailable(const std::vector<std::string_view>& extensions) {
+        return [extensions](const vk::raii::PhysicalDevice& device) {
+            const auto availableExtensions = device.enumerateDeviceExtensionProperties();
+            bool extensionsSupported = true;
+            // Check availability of all extensions
+            for (auto extension : extensions) {
+                if (!utils::contains(
+                        availableExtensions, extension, &vk::ExtensionProperties::extensionName)) {
+                    spdlog::debug("Device does not support extension {}", extension);
+                    extensionsSupported = false;
+                }
+            }
+            return extensionsSupported;
+        };
+    }
+
+private:
+    std::vector<CompatibilityTest> tests;
 };
 
+static const std::vector<std::string_view> g_requiredExtensions
+    = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+
 struct PhysicalDeviceScorekeeper {
-    void score() = 0;
+    void score();
     vk::raii::PhysicalDevice best();
     vk::raii::PhysicalDevice worst();
 };
 
 struct PhysicalDevicePicker {
-    vk::raii::PhysicalDevice pick(const vk::raii::PhysicalDevices& device) = 0;
+    vk::raii::PhysicalDevice pick(const vk::raii::PhysicalDevices& device);
 };
-
-*/
 
 int main(int argc, char* argv[]) try {
     magma::ContextCreateInfo createInfo{
